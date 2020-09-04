@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 import plotly.io as pio
 import plotly.graph_objects as go
@@ -283,10 +284,10 @@ def update(mstat, pwages, swages, item, businc, sstb):
         diff_str = "Stay the same"
         diff_col = {"color": "purple", "margin-left": 10, "font-weight": "bold"}
     elif (diff_tax > 0).bool():
-        diff_str = "Increase by ${:0,.0f}".format(abs(diff_tax.to_numpy()[0]))
+        diff_str = "Increase by ${:0,.0f}".format(diff_tax.to_numpy()[0])
         diff_col = {"color": "red", "margin-left": 10, "font-weight": "bold"}
     elif (diff_tax < 0).bool():
-        diff_str = "Decrease by ${:0,.0f}".format(diff_tax.to_numpy()[0])
+        diff_str = "Decrease by ${:0,.0f}".format(np.abs(diff_tax.to_numpy()[0]))
         diff_col = {"color": "green", "margin-left": 10, "font-weight": "bold"}
 
     return (
