@@ -146,25 +146,24 @@ def make_data(year):
     df_named = df_combos3.copy()
     df_named.columns = cols
 
+    keep = ["ID", "pwages", "swages", "mstat", "mortgage", "businc", "sstb", "year"]
+
+    df_named = df_named[keep]
+
     b = Batch(df_combos3)
-    baseline = b.create_table()
-    biden = b.create_table(reform_file=os.path.join(CURRENT_PATH, "biden.json"))
+
+    out_vars = ["RECID", "iitax", "payrolltax"]
+    out_labels = ["ID", "Individual Income Tax", "Payroll Tax"]
+
+    baseline = b.create_table(tc_vars=out_vars, tc_labels=out_labels, include_mtr=False)
+
+    biden_ref = os.path.join(CURRENT_PATH, "biden.json")
+    biden = b.create_table(
+        reform_file=biden_ref, tc_vars=out_vars, tc_labels=out_labels, include_mtr=False
+    )
 
     baseline_merged = baseline.merge(df_named, on="ID")
-    keep = [
-        "ID",
-        "Individual Income Tax",
-        "Payroll Tax",
-        "pwages",
-        "swages",
-        "mstat",
-        "mortgage",
-        "businc",
-        "sstb",
-        "year",
-    ]
-    df_baseline_temp = baseline_merged[keep]
-    df_baseline = df_baseline_temp.rename(
+    df_baseline = baseline_merged.rename(
         columns={"Individual Income Tax": "itax_base", "Payroll Tax": "payroll_base"}
     )
     df_baseline["combined_base"] = (
@@ -189,4 +188,4 @@ def stack_data():
 
 if __name__ == "__main__":
     df_all = stack_data()
-    df_all.to_parquet('widget_data.gzip', compression='gzip')
+    df_all.to_parquet("widget_data.gzip", compression="gzip")
