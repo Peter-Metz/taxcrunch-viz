@@ -31,18 +31,24 @@ def make_fig(mstat=2, pwages=80000, swages=0, item=0, businc=0, sstb=0):
         x=df_filter["year"],
         y=df_filter["combined_base"],
         name="Current Law",
-        hoverinfo="none",
+        marker_color="#d95825",
+        # hoverinfo="none",
         opacity=0.8,
         mode="lines",
+        hovertemplate="<b>Year: %{x}</b><br>"
+        + "Tax Liability: $%{y:,.0f}<extra></extra>"
     )
     base_trace.line = {"width": 4}
     biden_trace = go.Scatter(
         x=df_filter["year"],
         y=df_filter["combined_biden"],
         name="Biden 2020 Proposal",
-        hoverinfo="none",
+        marker_color="#2e26c7",
+        # hoverinfo="none",
         opacity=0.7,
         mode="lines",
+        hovertemplate="<b>Year: %{x}</b><br>"
+        + "Tax Liability: $%{y:,.0f}<extra></extra>"
     )
     biden_trace.line = {"width": 4}
     layout = go.Layout(yaxis_title="Total Federal Tax Liability", plot_bgcolor="white")
@@ -285,13 +291,13 @@ def update(mstat, pwages, swages, item, businc, sstb):
 
     if (diff_tax == 0).bool():
         diff_str = "Stay the same"
-        diff_col = {"color": "purple", "margin-left": 10, "font-weight": "bold"}
+        diff_col = {"color": "#673f91", "margin-left": 10, "font-weight": "bold"}
     elif (diff_tax > 0).bool():
         diff_str = "Increase by ${:0,.0f}".format(diff_tax.to_numpy()[0])
-        diff_col = {"color": "red", "margin-left": 10, "font-weight": "bold"}
+        diff_col = {"color": "#ba4141", "margin-left": 10, "font-weight": "bold"}
     elif (diff_tax < 0).bool():
         diff_str = "Decrease by ${:0,.0f}".format(np.abs(diff_tax.to_numpy()[0]))
-        diff_col = {"color": "green", "margin-left": 10, "font-weight": "bold"}
+        diff_col = {"color": "#338f3e", "margin-left": 10, "font-weight": "bold"}
 
     return (
         fig,
