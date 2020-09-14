@@ -27,30 +27,30 @@ def make_fig(mstat=2, pwages=80000, swages=0, item=0, businc=0, sstb=0):
         & (df_all["sstb"] == sstb)
     ]
 
-    base_trace = go.Scatter(
+    base_trace = go.Bar(
         x=df_filter["year"],
         y=df_filter["combined_base"],
         name="Current Law",
-        marker_color="#d95825",
-        # hoverinfo="none",
-        opacity=0.8,
-        mode="lines",
-        hovertemplate="<b>Year: %{x}</b><br>"
+        width=0.35,
+        marker_color="#6495ED",
+        opacity=0.85,
+        hovertemplate="<b>Current Law</b><br>"
+        + "Year: %{x}<br>"
         + "Tax Liability: $%{y:,.0f}<extra></extra>"
     )
-    base_trace.line = {"width": 4}
-    biden_trace = go.Scatter(
+
+    biden_trace = go.Bar(
         x=df_filter["year"],
         y=df_filter["combined_biden"],
         name="Biden 2020 Proposal",
-        marker_color="#2e26c7",
-        # hoverinfo="none",
-        opacity=0.7,
-        mode="lines",
-        hovertemplate="<b>Year: %{x}</b><br>"
+        width=0.35,
+        marker_color="#FF7F50",
+        opacity=0.85,
+        hovertemplate="<b>Biden Proposal</b><br>"
+        + "Year: %{x}<br>"
         + "Tax Liability: $%{y:,.0f}<extra></extra>"
     )
-    biden_trace.line = {"width": 4}
+
     layout = go.Layout(yaxis_title="Total Federal Tax Liability", plot_bgcolor="white")
     fig = go.Figure(data=[base_trace, biden_trace], layout=layout)
 
@@ -59,7 +59,6 @@ def make_fig(mstat=2, pwages=80000, swages=0, item=0, businc=0, sstb=0):
         yaxis_tickformat=",.",
         legend=dict(orientation="h", yanchor="bottom", y=1.10, xanchor="left"),
     )
-    # fig.update_yaxes(rangemode="tozero")
 
     return df_filter, fig
 
@@ -237,7 +236,6 @@ app.layout = dbc.Container(
 
 
 @app.callback(
-    # output is figure
     [
         Output("chart", "figure"),
         Output("pwages_label", "children"),
@@ -286,7 +284,7 @@ def update(mstat, pwages, swages, item, businc, sstb):
 
     pwages_str = "Primary Filer Wages: ${:0,.0f}".format(pwages)
     swages_str = "Spouse Wages: ${:0,.0f}".format(swages)
-    item_str = "Itemizable Deductions: ${:0,.0f}".format(item)
+    item_str = "Itemized Deductions: ${:0,.0f}".format(item)
     businc_str = "Business Income: ${:0,.0f}".format(businc)
 
     if (diff_tax == 0).bool():
